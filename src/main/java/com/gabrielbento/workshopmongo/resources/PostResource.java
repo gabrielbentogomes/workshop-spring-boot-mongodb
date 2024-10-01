@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.gabrielbento.workshopmongo.domain.Post;
 import com.gabrielbento.workshopmongo.domain.User;
 import com.gabrielbento.workshopmongo.dto.UserDTO;
+import com.gabrielbento.workshopmongo.resources.util.URL;
 import com.gabrielbento.workshopmongo.services.PostService;
 import com.gabrielbento.workshopmongo.services.UserService;
 
@@ -35,4 +37,16 @@ public class PostResource {
 		return ResponseEntity.ok().body(post);
 	}
 	
+	@GetMapping()
+	public ResponseEntity<List<Post>> getAll(){
+		List<Post> list = service.findAll();
+		return ResponseEntity.ok().body(list);
+	}
+	
+	@GetMapping(value = "/titlesearch")
+	public ResponseEntity<List<Post>> findByTitle(@RequestParam(value = "text", defaultValue = "") String text){
+		text = URL.decodeParam(text);
+		List<Post> list = service.findByTitle(text);
+		return ResponseEntity.ok().body(list);
+	}
 }
